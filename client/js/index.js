@@ -6,7 +6,7 @@ console.log(ethers);
 
 const mainTemplate = () => `
   <section>
-    <h2>ETH: <span id="ethBalance">0</span></h2>
+    <h2>ETH: <span id="ethBalance">0.0</span></h2>
     <div style="margin: 10px 0;">
       <label for="amount">Amount</label>
       <input id="amount" name="amount" type="number" value="0.1"  step="any" />
@@ -18,16 +18,23 @@ const mainTemplate = () => `
     <div style="margin: 10px 0;">
       <button id="balanceBtn">Balance</button>
     </div>
+    <div id="txState" style="margin: 10px 0;"></div>
   </section>
 `;
 
 const txMineListener = (transactionResponse, provider) => {
+  document.querySelector(
+    "#txState"
+  ).innerHTML = `Pending... ${transactionResponse.hash}`;
   console.log(`Mining ${transactionResponse.hash}`);
   return new Promise((resolve, reject) => {
     provider.once(transactionResponse.hash, (transactionReceipt) => {
       console.log(
         `Completed with ${transactionReceipt.confirmations} confirmations`
       );
+      document.querySelector(
+        "#txState"
+      ).innerHTML = `Completed with ${transactionReceipt.confirmations} confirmations`;
       resolve();
     });
   });
@@ -45,6 +52,8 @@ const fund = async (ethAmount) => {
     });
     await txMineListener(transactionResponse, provider);
     console.log("Done!");
+    document.querySelector("#txState").innerHTML = `tx Done!`;
+    balanceHandler();
   } catch (error) {
     console.log(error);
   }
@@ -63,6 +72,8 @@ const withdrawHandler = async () => {
     const transactionResponse = await contract.withdraw();
     await txMineListener(transactionResponse, provider);
     console.log("Done!");
+    document.querySelector("#txState").innerHTML = `tx Done!`;
+    balanceHandler();
   } catch (error) {
     console.log(error);
   }
