@@ -55,7 +55,18 @@ const fundHandler = () => {
   fund(ethAmount);
 };
 
-const withdrawHandler = async () => {};
+const withdrawHandler = async () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const contract = new ethers.Contract(contractAddress, abi, signer);
+  try {
+    const transactionResponse = await contract.withdraw();
+    await txMineListener(transactionResponse, provider);
+    console.log("Done!");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const balanceHandler = async () => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);

@@ -17,10 +17,6 @@ export const abi = [
     type: "error",
   },
   {
-    stateMutability: "payable",
-    type: "fallback",
-  },
-  {
     inputs: [],
     name: "cheaperWithdraw",
     outputs: [],
@@ -117,9 +113,5 @@ export const abi = [
     outputs: [],
     stateMutability: "payable",
     type: "function",
-  },
-  {
-    stateMutability: "payable",
-    type: "receive",
   },
 ];
